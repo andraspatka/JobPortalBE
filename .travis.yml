@@ -1,5 +1,12 @@
 language: java
+
+services:
+  - postgresql
+
 install: true
+
+before_install:
+  - chmod +x mvnw
 
 os: linux
 dist: bionic
