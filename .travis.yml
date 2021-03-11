@@ -1,0 +1,8 @@
+language: java
+install: true
+
+os: linux
+dist: bionic
+jdk: openjdk11
+script:
+  - ./mvnw test
