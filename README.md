@@ -1,4 +1,4 @@
-# JobPortalBE
+# JobPortalBE [![Build Status](https://travis-ci.com/andraspatka/JobPortalBE.svg?branch=main)](https://travis-ci.com/andraspatka/JobPortalBE)
 
 Techstack: 
 - BE: Java - Spring, Hibernate, maven, Postgresql
