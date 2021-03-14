@@ -9,6 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +30,7 @@ public class AuthenticationController {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationService authenticationService;
+    private final AuthenticationManager authenticationManager;
 
     /**
      * Creates a token for a successful login and sends it to the client.
@@ -47,7 +51,22 @@ public class AuthenticationController {
                     .body("User account is locked");
         }
         String token = jwtTokenUtil.generateToken(userDetails);
-        authenticationService.authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    /**
+     * Authenticates a user with email and password.
+     *
+     * @param email    of the user
+     * @param password of the user
+     * @throws InvalidCredentialsException when the entered credentials are invalid
+     */
+    private void authenticate(String email, String password) throws InvalidCredentialsException {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        } catch (BadCredentialsException e) {
+            throw new InvalidCredentialsException("The added credentials are invalid!");
+        }
     }
 }

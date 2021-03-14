@@ -12,13 +12,14 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
+@Entity
 @AllArgsConstructor
 @Table(name = "Users")
 public class User {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JPA_ID_GENERATOR")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JPA_ID_GENERATOR")
     private Long id;
 
     @Column(name = "first_name")

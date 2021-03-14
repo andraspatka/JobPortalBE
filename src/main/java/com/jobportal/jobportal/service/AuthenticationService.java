@@ -1,15 +1,11 @@
 package com.jobportal.jobportal.service;
 
 import com.jobportal.jobportal.dto.AuthenticationDto;
-import com.jobportal.jobportal.exceptions.InvalidCredentialsException;
 import com.jobportal.jobportal.model.User;
 import com.jobportal.jobportal.repository.UserRepository;
 import com.jobportal.jobportal.converter.AuthenticationConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,7 +26,6 @@ import java.util.Optional;
 public class AuthenticationService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private AuthenticationManager authenticationManager;
 
 
     /**
@@ -62,21 +57,6 @@ public class AuthenticationService implements UserDetailsService {
                     true, true, true, true, AuthorityUtils.NO_AUTHORITIES);
         } else {
             throw new UsernameNotFoundException("User not found with email: " + email);
-        }
-    }
-
-    /**
-     * Authenticates a user with email and password.
-     *
-     * @param email    of the user
-     * @param password of the user
-     * @throws InvalidCredentialsException when the entered credentials are invalid
-     */
-    public void authenticate(String email, String password) throws InvalidCredentialsException {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        } catch (BadCredentialsException e) {
-            throw new InvalidCredentialsException("The added credentials are invalid!");
         }
     }
 }
