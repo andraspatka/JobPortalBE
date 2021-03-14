@@ -20,6 +20,7 @@ import java.util.Objects;
 
 
 /**
+ * JSON Web Token filter.
  *
  * @since 13.03.2021
  */
@@ -70,7 +71,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private String getEmailFromToken(String jwtToken) {
         String email = null;
         try {
-            email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+            email = jwtTokenUtil.getEmailFromToken(jwtToken);
         } catch (IllegalArgumentException e) {
             logger.error("Unable to get JWT Token: " + e);
         } catch (ExpiredJwtException e) {

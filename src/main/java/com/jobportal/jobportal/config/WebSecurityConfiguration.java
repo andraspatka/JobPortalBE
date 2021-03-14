@@ -19,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.assertj.core.util.Lists;
 
 /**
+ *Class containing the web security configuration.
  *
  * @since 13.03.2021
  */

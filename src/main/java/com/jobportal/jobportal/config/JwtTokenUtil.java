@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
+ * Handles the creation of a token for an user.
  *
  * @since 13.03.2021
  */
@@ -37,10 +37,29 @@ public class JwtTokenUtil implements Serializable {
     private final AuthenticationService authenticationService;
 
     /**
-     * Returns the
+     * Returns the email from the token.
+     *
+     * @param token the current token
+     * @return String containing the email of the user
      */
-    String getUsernameFromToken(String token) {
+    String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    /**
+     * Generates a token containing the email, role, expiration date and the secret
+     * encoded backend password.
+     *
+     * @param userDetails of the logged users
+     * @return String containing the generated token
+     */
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        AuthenticationDto authenticationDto = authenticationService.getUserByEmail(userDetails.getUsername());
+        claims.put(CLAIM_KEY_ROLE, authenticationDto.getRole());
+        claims.put(CLAIM_KEY_USERNAME, authenticationDto.getEmail());
+        claims.put(CLAIM_KEY_ID, authenticationDto.getId());
+        return doGenerateToken(claims, userDetails.getUsername());
     }
 
     private Date getExpirationDateFromToken(String token) {
@@ -59,15 +78,6 @@ public class JwtTokenUtil implements Serializable {
         return getExpirationDateFromToken(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        AuthenticationDto authenticationDto = authenticationService.getUserByEmail(userDetails.getUsername());
-        claims.put(CLAIM_KEY_ROLE, authenticationDto.getRole());
-        claims.put(CLAIM_KEY_USERNAME, authenticationDto.getEmail());
-        claims.put(CLAIM_KEY_ID, authenticationDto.getId());
-        return doGenerateToken(claims, userDetails.getUsername());
-    }
-
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -79,6 +89,6 @@ public class JwtTokenUtil implements Serializable {
     }
 
     Boolean validateToken(String token, UserDetails userDetails) {
-        return getUsernameFromToken(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return getEmailFromToken(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 }
