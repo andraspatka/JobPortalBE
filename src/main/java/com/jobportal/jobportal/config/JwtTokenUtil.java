@@ -31,8 +31,8 @@ public class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_USERNAME = "username";
     private static final String CLAIM_KEY_ID = "id";
 
-    @Value("${server.password}")
-    private static String SERVER_PASSWORD;
+    //TODO put it in a config file
+    private static String SERVER_PASSWORD = "SuperSecret";
 
     private final AuthenticationService authenticationService;
 
