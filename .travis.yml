@@ -10,7 +10,7 @@ notifications:
 before_install:
   - chmod +x mvnw
   - COMMITS_SINCE_MAIN=$(git rev-list --count HEAD ^main)
-  - TAG_NAME=$(echo "${TRAVIS_BRANCH}-m.${COMMITS_SINCE_MAIN}"
+  - TAG_NAME=$(echo "${TRAVIS_BRANCH}-m.${COMMITS_SINCE_MAIN}")
 
 os: linux
 dist: bionic
