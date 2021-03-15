@@ -101,7 +101,7 @@
 						<image>openjdk:8u282-jre-slim-buster</image>
 					</from>
 					<to>
-						<image>docker.pkg.github.com/andraspatka/jobportalbe</image>
+						<image>ghcr.io/andraspatka/jobportalbe</image>
 						<auth>
 							<username>${env.GITHUB_USER}</username>
 							<password>${env.GITHUB_TOKEN}</password>
