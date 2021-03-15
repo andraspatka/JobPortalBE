@@ -20,4 +20,4 @@ dist: bionic
 jdk: openjdk11
 script:
   - ./mvnw test
-  - ./mvnw compile jib:build
+  - ./mvnw compile jib:build -Dversion="${VERSION_NAME}"

@@ -10,11 +10,12 @@
 	</parent>
 	<groupId>com.jobportal</groupId>
 	<artifactId>jobportal</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${version}</version>
 	<name>jobportal</name>
 	<description>Job portal</description>
 	<properties>
 		<java.version>11</java.version>
+		<version>0.0.1-SNAPSHOT</version>
 	</properties>
 	<dependencies>
 		<!-- DEV dependencies-->
@@ -101,7 +102,7 @@
 						<image>openjdk:8u282-jre-slim-buster</image>
 					</from>
 					<to>
-						<image>ghcr.io/andraspatka/jobportalbe</image>
+						<image>ghcr.io/andraspatka/jobportalbe:${version}</image>
 						<auth>
 							<username>${env.GITHUB_USER}</username>
 							<password>${env.GITHUB_TOKEN}</password>
