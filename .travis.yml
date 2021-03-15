@@ -4,12 +4,17 @@ services:
   - postgresql
 
 install: true
+notifications:
+  email: false
 
 before_install:
   - chmod +x mvnw
+  - COMMITS_SINCE_MAIN=$(git rev-list --count HEAD ^main)
+  - TAG_NAME=$(echo "${TRAVIS_BRANCH}-m.${COMMITS_SINCE_MAIN}"
 
 os: linux
 dist: bionic
 jdk: openjdk11
 script:
   - ./mvnw test
+  - ./mvnw compile jib:build
