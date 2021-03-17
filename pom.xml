@@ -16,12 +16,20 @@
 	<properties>
 		<java.version>11</java.version>
 		<version>0.0.1-SNAPSHOT</version>
+		<openapi.generator.version>5.0.1</openapi.generator.version>
+		<springfox-version>2.9.2</springfox-version>
+		<openapi.package>com.jobportal.openapi</openapi.package>
 	</properties>
 	<dependencies>
 		<!-- DEV dependencies-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.plugin</groupId>
+			<artifactId>spring-plugin-core</artifactId>
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -78,6 +86,22 @@
 			<version>3.13.2</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>openapi-generator</artifactId>
+			<version>${openapi.generator.version}</version>
+		</dependency>
+		<!--SpringFox dependencies -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
 
 		<!-- TEST Dependencies -->
 		<dependency>
@@ -110,7 +134,50 @@
 					</to>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/example.json</inputSpec>
+							<output>${project.build.directory}/generated-sources</output>
+							<apiPackage>${openapi.package}.api</apiPackage>
+							<modelPackage>${openapi.package}.model</modelPackage>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.openapitools</groupId>
+					<artifactId>openapi-generator-maven-plugin</artifactId>
+					<version>${openapi.generator.version}</version>
+					<configuration>
+						<generatorName>spring</generatorName>
+						<library>spring-boot</library>
+						<generateApis>true</generateApis>
+						<generateSupportingFiles>true</generateSupportingFiles>
+						<generateApiTests>false</generateApiTests>
+						<generateModelTests>false</generateModelTests>
+						<generateApiDocumentation>false</generateApiDocumentation>
+						<generateModelDocumentation>false</generateModelDocumentation>
+						<configOptions>
+							<interfaceOnly>true</interfaceOnly>
+							<skipDefaultInterface>true</skipDefaultInterface>
+							<openApiNullable>false</openApiNullable>
+						</configOptions>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
+
 
 </project>
