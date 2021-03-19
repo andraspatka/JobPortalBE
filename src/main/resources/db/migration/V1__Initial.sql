@@ -4,6 +4,5 @@ CREATE TABLE USERS (
     LAST_NAME text,
     ROLE text,
     COMPANY text,
-    EMAIL text,
-    PASSWORD text
+    EMAIL text
 );

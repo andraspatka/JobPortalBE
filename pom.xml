@@ -17,7 +17,7 @@
 		<java.version>11</java.version>
 		<version>0.0.1-SNAPSHOT</version>
 		<openapi.generator.version>5.0.1</openapi.generator.version>
-		<springfox-version>2.9.2</springfox-version>
+		<springfox-version>3.0.0</springfox-version>
 		<openapi.package>com.jobportal.openapi</openapi.package>
 	</properties>
 	<dependencies>
@@ -100,6 +100,11 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-core</artifactId>
 			<version>${springfox-version}</version>
 		</dependency>
 
