@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.config;
+package com.jobportal.jobportal.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

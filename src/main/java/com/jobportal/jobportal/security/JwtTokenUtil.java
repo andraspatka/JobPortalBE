@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.config;
+package com.jobportal.jobportal.security;
 
 import com.jobportal.jobportal.dto.AuthenticationDto;
 import com.jobportal.jobportal.service.AuthenticationService;
@@ -31,7 +31,7 @@ public class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_USERNAME = "username";
     private static final String CLAIM_KEY_ID = "id";
 
-    //TODO put it in a config file
+    //TODO put it in a security file
     private static String SERVER_PASSWORD = "SuperSecret";
 
     private final AuthenticationService authenticationService;

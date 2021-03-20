@@ -1,8 +1,8 @@
 package com.jobportal.jobportal.controller;
 
-import com.jobportal.jobportal.config.JwtRequest;
-import com.jobportal.jobportal.config.JwtResponse;
-import com.jobportal.jobportal.config.JwtTokenUtil;
+import com.jobportal.jobportal.security.JwtRequest;
+import com.jobportal.jobportal.security.JwtResponse;
+import com.jobportal.jobportal.security.JwtTokenUtil;
 import com.jobportal.jobportal.exceptions.InvalidCredentialsException;
 import com.jobportal.jobportal.service.AuthenticationService;
 import lombok.AllArgsConstructor;

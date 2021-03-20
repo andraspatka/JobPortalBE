@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.config;
+package com.jobportal.jobportal.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.config;
+package com.jobportal.jobportal.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.assertj.core.util.Lists;
 
 /**
- *Class containing the web security configuration.
+ * Class containing the web security configuration.
  *
  * @since 13.03.2021
  */

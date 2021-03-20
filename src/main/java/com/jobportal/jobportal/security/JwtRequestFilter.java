@@ -1,4 +1,4 @@
-package com.jobportal.jobportal.config;
+package com.jobportal.jobportal.security;
 
 import com.jobportal.jobportal.service.AuthenticationService;
 import io.jsonwebtoken.ExpiredJwtException;
