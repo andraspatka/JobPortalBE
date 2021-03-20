@@ -59,6 +59,42 @@
           }
         }
       }
+    },
+    "/users": {
+      "post": {
+        "description": "Adds a user in the Job Portal.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInformation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User was successfully added in the Job Portal.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "A problem occurred while trying to add the user in the Job Portal.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -81,6 +117,29 @@
             "type": "object"
           },
           "body": {
+            "type": "string"
+          }
+        }
+      },
+      "UserInformation": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "firstname":{
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "company": {
             "type": "string"
           }
         }
