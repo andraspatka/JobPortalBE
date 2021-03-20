@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Job Portal API",
+    "version": "2.0.0"
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "description": "Post request with username and password for logging in the application.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+            "schema": {
+                "$ref": "#/components/schemas/JwtRequest"
+            }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated token for the logged user containing the id, email, role and expiration time.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthenticationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Existing user account is locked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthenticationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The added credentials are invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthenticationResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JwtRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "object"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
