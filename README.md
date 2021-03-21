@@ -77,6 +77,7 @@ On each commit, the tests are ran and a dockerimage is created and pushed to the
 
 Overview:
 
+![Ci Concept](docs/CiCdConcept.png)
 
 Versioning concept: major.minor.patch-branchName-m.numberOfCommits
 example: 0.0.1-main-m.34
