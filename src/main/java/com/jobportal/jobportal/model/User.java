@@ -16,12 +16,16 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Users")
+@Table(name = "Users",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "UC_USER_EMAIL", columnNames = {"EMAIL"})
+        })
 public class User {
 
     @Id
     @Column(name = "id", nullable = false)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JPA_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "first_name")
@@ -43,9 +47,4 @@ public class User {
 
     @Column(name = "password")
     private String password;
-
-
-
-
-
 }
