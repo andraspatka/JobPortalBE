@@ -66,3 +66,17 @@ For an example, please look at:
 - src/main/resources/openapi/example.json
 - HelloController.java
 - WorldController.java
+
+## Ci/CD
+
+Techstack:
+- Ci: Travis
+- Platform for deployments: Heroku
+
+On each commit, the tests are ran and a dockerimage is created and pushed to the Github Container registry "jobportalbe".
+
+Overview:
+
+
+Versioning concept: major.minor.patch-branchName-m.numberOfCommits
+example: 0.0.1-main-m.34
