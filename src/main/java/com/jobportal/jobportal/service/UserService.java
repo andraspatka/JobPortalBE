@@ -36,8 +36,9 @@ public class UserService {
             User user = UserConverter.convertDtoToEntity(userDto);
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
+        } else {
+            throw new UserNotAddedException("Email for the introduced user already exists in te database.");
         }
-        throw new UserNotAddedException("Email for the introduced user already exists in te database.");
     }
 
     private boolean isUniqueUser(String email) {
