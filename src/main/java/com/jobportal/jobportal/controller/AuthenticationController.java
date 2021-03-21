@@ -1,10 +1,9 @@
 package com.jobportal.jobportal.controller;
 
-import com.jobportal.jobportal.config.JwtRequest;
-import com.jobportal.jobportal.config.JwtResponse;
-import com.jobportal.jobportal.config.JwtTokenUtil;
-import com.jobportal.jobportal.exceptions.InvalidCredentialsException;
+import com.jobportal.jobportal.security.JwtTokenUtil;
 import com.jobportal.jobportal.service.AuthenticationService;
+import com.jobportal.openapi.api.LoginApi;
+import com.jobportal.openapi.model.AuthenticationResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +13,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Controller for authentication a user with his email and password.
@@ -26,47 +26,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @AllArgsConstructor(onConstructor_ = @Autowired)
-public class AuthenticationController {
+public class AuthenticationController implements LoginApi {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Creates a token for a successful login and sends it to the client.
-     *
-     * @param authenticationRequest containing the email and password
-     * @return response entity containing the generated token if the login
-     * was successful or the error code 403 (FORBIDDEN) if the credentials were
-     * invalid.
+     * {@inheritDoc}
      */
-    @PostMapping(value = "/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
-            throws InvalidCredentialsException {
+    @Override
+    public ResponseEntity<List<AuthenticationResponse>> loginPost(com.jobportal.openapi.model.@Valid JwtRequest jwtRequest) {
         final UserDetails userDetails = authenticationService
-                .loadUserByUsername(authenticationRequest.getEmail());
+                .loadUserByUsername(jwtRequest.getEmail());
         if (!userDetails.isAccountNonLocked()) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("User account is locked");
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody("User account is locked");
+            response.setStatus(HttpStatus.FORBIDDEN);
+            return ResponseEntity.ok(List.of(response));
         }
         String token = jwtTokenUtil.generateToken(userDetails);
-        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-        return ResponseEntity.ok(new JwtResponse(token));
+        return authenticate(jwtRequest.getEmail(), jwtRequest.getPassword(), token);
     }
+
 
     /**
      * Authenticates a user with email and password.
      *
      * @param email    of the user
      * @param password of the user
-     * @throws InvalidCredentialsException when the entered credentials are invalid
+     * @param token generated token for the user
      */
-    private void authenticate(String email, String password) throws InvalidCredentialsException {
+    private ResponseEntity<List<AuthenticationResponse>> authenticate(String email, String password, String token) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(token);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(List.of(response));
         } catch (BadCredentialsException e) {
-            throw new InvalidCredentialsException("The added credentials are invalid!");
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody("The entered credentials are invalid!");
+            response.setStatus(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.ok(List.of(response));
         }
     }
 }

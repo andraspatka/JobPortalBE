@@ -4,7 +4,6 @@ import com.jobportal.jobportal.dto.UserDto;
 import com.jobportal.jobportal.model.User;
 import lombok.experimental.UtilityClass;
 
-
 /**
  * Converter class to create a {@link User} from an {@link UserDto}
  * and vice versa.
@@ -22,6 +21,7 @@ public class UserConverter {
     public static User convertDtoToEntity(UserDto userDto) {
         return User.builder()
                 .firstName(userDto.getFirstName())
+                .password(userDto.getPassword())
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
                 .role(userDto.getRole())

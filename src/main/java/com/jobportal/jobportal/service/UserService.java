@@ -11,8 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 /**
  * Service that handles the functionality related to the Users.
  *
@@ -31,16 +29,18 @@ public class UserService {
      *
      * @param userDto the current {@link UserDto} with the
      *                information of a user to be added
-     * @return added user
-     * @throws UserNotAddedException if the user could not be inserted
+     * @throws UserNotAddedException if the email is not unique
      */
-    public User addUser(UserDto userDto) {
-        User user = UserConverter.convertDtoToEntity(userDto);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        User addedUser = userRepository.save(user);
-        if (Objects.nonNull(addedUser)) {
-            return addedUser;
+    public void addUser(UserDto userDto) {
+        if (isUniqueUser(userDto.getEmail())) {
+            User user = UserConverter.convertDtoToEntity(userDto);
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
         }
-        throw new UserNotAddedException("Error while trying to add the user: " + user);
+        throw new UserNotAddedException("Email for the introduced user already exists in te database.");
+    }
+
+    private boolean isUniqueUser(String email) {
+        return userRepository.findUserByEmail(email).isEmpty();
     }
 }

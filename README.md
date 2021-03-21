@@ -55,7 +55,7 @@ References:
 
 In order to generate code from the OpenAPI specs, run the following command:
 ```
-mvnw clean generate-sources
+mvn clean generate-sources
 ```
 
 The sources are generated under **target/generated-sources/main/java/com/jobportal/openapi**

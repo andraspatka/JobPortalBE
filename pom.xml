@@ -145,12 +145,24 @@
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<executions>
+					<!--			TODO Uncomment this if you want to see the OPEN API example-->
+					<!--					<execution>-->
+<!--						<goals>-->
+<!--							<goal>generate</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<inputSpec>${project.basedir}/src/main/resources/openapi/example.json</inputSpec>-->
+<!--							<output>${project.build.directory}/generated-sources</output>-->
+<!--							<apiPackage>${openapi.package}.api</apiPackage>-->
+<!--							<modelPackage>${openapi.package}.model</modelPackage>-->
+<!--						</configuration>-->
+<!--					</execution>-->
 					<execution>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/openapi/example.json</inputSpec>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/job_portal_specs.json</inputSpec>
 							<output>${project.build.directory}/generated-sources</output>
 							<apiPackage>${openapi.package}.api</apiPackage>
 							<modelPackage>${openapi.package}.model</modelPackage>
