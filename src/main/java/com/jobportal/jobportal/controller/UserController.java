@@ -37,8 +37,7 @@ public class UserController implements UsersApi {
                 .password(userInformation.getPassword())
                 .firstName(userInformation.getFirstname())
                 .lastName(userInformation.getLastname())
-                //TODO
-//                .company(userInformation.getCompany())
+                .company(userInformation.getCompany())
                 .role(Role.valueOf(userInformation.getRole()))
                 .build();
         try {

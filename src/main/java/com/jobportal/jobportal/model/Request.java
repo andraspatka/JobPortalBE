@@ -26,12 +26,8 @@ public class Request {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id")
-    private List<User> approvedBy ;
+    private List<User> approvedBy;
 
-
-    @Column(name = "approved_on ")
+    @Column(name = "approved_on")
     private Date approvedOn;
-
-
-
 }

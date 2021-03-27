@@ -25,7 +25,6 @@ public class UserConverter {
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
                 .role(userDto.getRole())
-                .company(userDto.getCompany())
                 .build();
     }
 }

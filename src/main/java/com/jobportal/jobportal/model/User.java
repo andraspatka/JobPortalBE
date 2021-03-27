@@ -3,7 +3,6 @@ package com.jobportal.jobportal.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * User entity class.
@@ -38,9 +37,10 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private Role role;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "Company")
-    private List<Company> company;
+    @ManyToOne(cascade = CascadeType.ALL)
+//    @Column(name = "company")
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_USERS_COMPANY"), name = "company")
+    private Company company;
 
     @Column(name = "email")
     private String email;

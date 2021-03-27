@@ -3,7 +3,8 @@ package com.jobportal.jobportal.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,11 +20,15 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id" )
-    private List<User> admin;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "id")
+    @Builder.Default
+    private Set<User> employees = new HashSet<>();
 
     @Column(name = "name")
     private String name;
 
+    public void addUser(User user) {
+        this.employees.add(user);
+        user.setCompany(this);
+    }
 }

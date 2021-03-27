@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.service;
 
+import com.jobportal.jobportal.component.CompanyComponent;
 import com.jobportal.jobportal.dto.UserDto;
 import com.jobportal.jobportal.exceptions.UserNotAddedException;
 import com.jobportal.jobportal.model.User;
@@ -22,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CompanyComponent companyComponent;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
-     * Adds a user in the database.
+     * Adds a user with its company in the database.
      *
      * @param userDto the current {@link UserDto} with the
      *                information of a user to be added
@@ -36,6 +38,7 @@ public class UserService {
             User user = UserConverter.convertDtoToEntity(userDto);
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
+            companyComponent.addCompany(userDto.getCompany(), user);
         } else {
             throw new UserNotAddedException("Email for the introduced user already exists in te database.");
         }
