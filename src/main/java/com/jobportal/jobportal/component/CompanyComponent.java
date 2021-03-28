@@ -1,5 +1,6 @@
 package com.jobportal.jobportal.component;
 
+import com.jobportal.jobportal.exceptions.CompanyNotExistingException;
 import com.jobportal.jobportal.model.Company;
 import com.jobportal.jobportal.model.User;
 import com.jobportal.jobportal.repository.CompanyRepository;
@@ -24,19 +25,16 @@ public class CompanyComponent {
     private final CompanyRepository companyRepository;
 
     /**
-     * Adds a new company if the name of the company is not
-     * already present.
+     * Adds a user to a company if the name of the company is present
+     * in the database. Otherwise, an exception is thrown
      *
      * @param companyName name of the company
      * @param user        to be added to this company
      */
-    public void addCompany(@NonNull String companyName, @NotNull User user) {
+    public void addCompanyToUser(@NonNull String companyName, @NotNull User user) {
         Company existingCompany = getCompanyByName(companyName);
         if (Objects.isNull(existingCompany)) {
-            Company newCompany = new Company();
-            newCompany.setName(companyName);
-            newCompany.addUser(user);
-            companyRepository.save(newCompany);
+            throw new CompanyNotExistingException("The company " + companyName + "does not exist.");
         } else {
             existingCompany.addUser(user);
         }

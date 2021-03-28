@@ -28,6 +28,9 @@ import java.util.List;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class AuthenticationController implements LoginApi {
 
+    private static final String USER_ACCOUNT_LOCKED_MESSAGE = "User account is locked";
+    private static final String INVALID_CREDENTIALS_MESSAGE = "The entered credentials are invalid!";
+
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
@@ -41,7 +44,7 @@ public class AuthenticationController implements LoginApi {
                 .loadUserByUsername(jwtRequest.getEmail());
         if (!userDetails.isAccountNonLocked()) {
             AuthenticationResponse response = new AuthenticationResponse();
-            response.setBody("User account is locked");
+            response.setBody(USER_ACCOUNT_LOCKED_MESSAGE);
             response.setStatus(HttpStatus.FORBIDDEN);
             return ResponseEntity.ok(List.of(response));
         }
@@ -66,7 +69,7 @@ public class AuthenticationController implements LoginApi {
             return ResponseEntity.ok(List.of(response));
         } catch (BadCredentialsException e) {
             AuthenticationResponse response = new AuthenticationResponse();
-            response.setBody("The entered credentials are invalid!");
+            response.setBody(INVALID_CREDENTIALS_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.ok(List.of(response));
         }

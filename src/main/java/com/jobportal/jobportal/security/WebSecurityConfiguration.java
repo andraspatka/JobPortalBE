@@ -31,6 +31,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String ALLOWED_ORIGINS = "http://localhost:4200";
     private static final String LOGIN_RESOURCE = "/login";
     private static final String USER_RESOURCE = "/users";
+    private static final String REQUEST_RESOURCE = "/request";
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final UserDetailsService jwtUserDetailsService;
@@ -57,7 +58,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .cors().and()
                 .csrf().disable()
-                .authorizeRequests().antMatchers(LOGIN_RESOURCE, USER_RESOURCE).permitAll()
+                //TODO remove not permitted resources
+                .authorizeRequests().antMatchers(LOGIN_RESOURCE, USER_RESOURCE, REQUEST_RESOURCE).permitAll()
                 .anyRequest().permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

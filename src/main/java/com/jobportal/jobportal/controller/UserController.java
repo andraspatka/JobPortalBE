@@ -1,6 +1,8 @@
 package com.jobportal.jobportal.controller;
 
 import com.jobportal.jobportal.dto.UserDto;
+import com.jobportal.jobportal.exceptions.CompanyNotExistingException;
+import com.jobportal.jobportal.exceptions.InvalidRoleException;
 import com.jobportal.jobportal.exceptions.UserNotAddedException;
 import com.jobportal.jobportal.model.Role;
 import com.jobportal.jobportal.service.UserService;
@@ -25,11 +27,13 @@ import javax.validation.Valid;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class UserController implements UsersApi {
 
+    private static final String USER_ADDED_MESSAGE = "User was successfully added";
+
     private final UserService userService;
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public ResponseEntity<String> usersPost(@Valid UserInformation userInformation) {
         final UserDto userDto = UserDto.builder()
@@ -42,10 +46,10 @@ public class UserController implements UsersApi {
                 .build();
         try {
             userService.addUser(userDto);
-            return ResponseEntity.ok("User was successfully added");
-        } catch (UserNotAddedException exception) {
+            return ResponseEntity.ok(USER_ADDED_MESSAGE);
+        } catch (UserNotAddedException | InvalidRoleException | CompanyNotExistingException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("A problem occurred while trying to add the user in the Job Portal.");
+                    .body(exception.getMessage());
         }
     }
 }

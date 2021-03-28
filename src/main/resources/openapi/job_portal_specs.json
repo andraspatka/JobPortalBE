@@ -95,6 +95,42 @@
           }
         }
       }
+    },
+    "/request": {
+      "post": {
+        "description": "Sends a request to the admin to become an employer of the company.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request was successfully sent to the admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "User cannot become an employer. No request has been sent to the admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

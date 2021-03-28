@@ -27,6 +27,10 @@ public class Company {
     @Column(name = "name")
     private String name;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "admin_id", referencedColumnName = "id", nullable = false)
+    private User admin;
+
     public void addUser(User user) {
         this.employees.add(user);
         user.setCompany(this);

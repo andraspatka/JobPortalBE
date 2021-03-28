@@ -20,13 +20,13 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id")
-    private List<User> requestedBy;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "request_by", referencedColumnName = "id", nullable = false)
+    private User requestedBy;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id")
-    private List<User> approvedBy;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_APPROVEDBY_USER"), name = "approved_by") //todo
+    private User approvedBy;
 
     @Column(name = "approved_on")
     private Date approvedOn;

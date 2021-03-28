@@ -3,6 +3,8 @@ package com.jobportal.jobportal.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User entity class.
@@ -38,7 +40,6 @@ public class User {
     private Role role;
 
     @ManyToOne(cascade = CascadeType.ALL)
-//    @Column(name = "company")
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_USERS_COMPANY"), name = "company")
     private Company company;
 
@@ -47,4 +48,14 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @OneToOne(mappedBy = "requestedBy")
+    private Request sentRequest;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "approvedBy")
+    @Builder.Default
+    private Set<Request> receivedRequests = new HashSet<>();
+
+    @OneToOne(mappedBy = "admin")
+    private Company conductedCompany;
 }
