@@ -29,7 +29,6 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
 
-
     /**
      * Sends a request for the user with the given email to the
      * admin of its company to become an employer.
@@ -52,13 +51,18 @@ public class RequestService {
 
     private void sendRequest(@NonNull User sender) {
         switch (sender.getRole()) {
-            case EMPLOYEE:
-                requestRepository.save(buildRequest(sender));
+            case EMPLOYEE: {
+                if (requestAlreadyExists(sender, sender.getCompany().getAdmin())) {
+                    throw new RequestException("Request has already been sent.");
+                } else {
+                    requestRepository.save(buildRequest(sender));
+                }
                 break;
+            }
             case ADMIN:
-                throw new RequestException("The admin of this company cannot become an employer");
+                throw new RequestException("The admin of this company cannot become an employer.");
             case EMPLOYER:
-                throw new RequestException("The user is already an employer");
+                throw new RequestException("The user is already an employer.");
         }
     }
 
@@ -67,5 +71,9 @@ public class RequestService {
                 .approvedBy(sender.getCompany().getAdmin())
                 .requestedBy(sender)
                 .build();
+    }
+
+    private boolean requestAlreadyExists(User sender, User receiver) {
+        return requestRepository.findByRequestedByAndApprovedBy(sender, receiver).isPresent();
     }
 }

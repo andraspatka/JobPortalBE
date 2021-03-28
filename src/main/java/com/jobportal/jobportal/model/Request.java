@@ -12,8 +12,15 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Request")
+@Table(name = "Request", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "UC_REQUEST_APPROVED", columnNames =
+                {Request.REQUEST_BY_COLUMN_NAME, Request.APPROVED_BY_COLUMN_NAME})
+})
 public class Request {
+
+    static final String REQUEST_BY_COLUMN_NAME = "request_by";
+    static final String APPROVED_BY_COLUMN_NAME = "approved_by";
 
     @Id
     @Column(name = "id", nullable = false)
@@ -21,11 +28,11 @@ public class Request {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "request_by", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = REQUEST_BY_COLUMN_NAME, referencedColumnName = "id", nullable = false)
     private User requestedBy;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_APPROVEDBY_USER"), name = "approved_by") //todo
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_APPROVEDBY_USER"), name = APPROVED_BY_COLUMN_NAME)
     private User approvedBy;
 
     @Column(name = "approved_on")

@@ -26,7 +26,6 @@ public class Applications {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id" )
-    //@Column(name = "user_id")
     private List<User> userId;
 
     @Column(name = "date_applied")

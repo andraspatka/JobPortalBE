@@ -1,8 +1,11 @@
 package com.jobportal.jobportal.repository;
 
 import com.jobportal.jobportal.model.Request;
+import com.jobportal.jobportal.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * Repository for the {@link Request} entity.
@@ -11,4 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface RequestRepository extends JpaRepository<Request, Long> {
+
+    Optional<Request> findByRequestedByAndApprovedBy(User requestBy, User approvedBy);
 }
