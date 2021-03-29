@@ -4,6 +4,7 @@ import com.jobportal.jobportal.security.JwtTokenUtil;
 import com.jobportal.jobportal.service.AuthenticationService;
 import com.jobportal.openapi.api.LoginApi;
 import com.jobportal.openapi.model.AuthenticationResponse;
+import com.jobportal.openapi.model.JwtRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * Controller for authentication a user with his email and password.
@@ -39,14 +39,14 @@ public class AuthenticationController implements LoginApi {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<List<AuthenticationResponse>> loginPost(com.jobportal.openapi.model.@Valid JwtRequest jwtRequest) {
+    public ResponseEntity<AuthenticationResponse> loginPost(@Valid JwtRequest jwtRequest) {
         final UserDetails userDetails = authenticationService
                 .loadUserByUsername(jwtRequest.getEmail());
         if (!userDetails.isAccountNonLocked()) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(USER_ACCOUNT_LOCKED_MESSAGE);
             response.setStatus(HttpStatus.FORBIDDEN);
-            return ResponseEntity.ok(List.of(response));
+            return ResponseEntity.ok(response);
         }
         String token = jwtTokenUtil.generateToken(userDetails);
         return authenticate(jwtRequest.getEmail(), jwtRequest.getPassword(), token);
@@ -60,18 +60,18 @@ public class AuthenticationController implements LoginApi {
      * @param password of the user
      * @param token generated token for the user
      */
-    private ResponseEntity<List<AuthenticationResponse>> authenticate(String email, String password, String token) {
+    private ResponseEntity<AuthenticationResponse> authenticate(String email, String password, String token) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(token);
             response.setStatus(HttpStatus.OK);
-            return ResponseEntity.ok(List.of(response));
+            return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(INVALID_CREDENTIALS_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
-            return ResponseEntity.ok(List.of(response));
+            return ResponseEntity.ok(response);
         }
     }
 }
