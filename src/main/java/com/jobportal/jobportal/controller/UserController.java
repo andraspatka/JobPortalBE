@@ -7,6 +7,7 @@ import com.jobportal.jobportal.exceptions.UserNotAddedException;
 import com.jobportal.jobportal.model.Role;
 import com.jobportal.jobportal.service.UserService;
 import com.jobportal.openapi.api.UsersApi;
+import com.jobportal.openapi.model.AuthenticationResponse;
 import com.jobportal.openapi.model.UserInformation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import javax.validation.Valid;
 public class UserController implements UsersApi {
 
     private static final String USER_ADDED_MESSAGE = "User was successfully added";
+    private static final String USER_NOT_ADDED_MESSAGE = "User could not be added";
 
     private final UserService userService;
 
@@ -35,7 +37,7 @@ public class UserController implements UsersApi {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<String> usersPost(@Valid UserInformation userInformation) {
+    public ResponseEntity<AuthenticationResponse> usersPost(@Valid UserInformation userInformation) {
         final UserDto userDto = UserDto.builder()
                 .email(userInformation.getEmail())
                 .password(userInformation.getPassword())
@@ -46,10 +48,15 @@ public class UserController implements UsersApi {
                 .build();
         try {
             userService.addUser(userDto);
-            return ResponseEntity.ok(USER_ADDED_MESSAGE);
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(USER_ADDED_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (UserNotAddedException | InvalidRoleException | CompanyNotExistingException exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(exception.getMessage());
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(USER_NOT_ADDED_MESSAGE);
+            response.setStatus(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.ok(response);
         }
     }
 }
