@@ -49,14 +49,14 @@ get_new_version ${RELEASE_TYPE}
 echo "Installing Heroku CLI"
 curl https://cli-assets.heroku.com/install.sh | sh
 
-./mvnw versions:set -DnewVersion="${NEW_VERSION}"
+./mvnw versions:set -DnewVersion="${NEW_VERSION}" --no-transfer-progress
 
 echo "Logging into Heroku container registry"
 heroku container:login
 
 # Build and push docker image
 echo "Building and pushing docker image with JIB"
-./mvnw compile jib:build
+./mvnw compile jib:build --no-transfer-progress
 
 echo "Deploying..."
 heroku container:release web --app $HEROKU_APP

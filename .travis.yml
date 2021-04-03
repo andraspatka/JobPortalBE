@@ -16,7 +16,7 @@ os: linux
 dist: bionic
 jdk: openjdk11
 script:
-  - ./mvnw test
+  - ./mvnw test --no-transfer-progress
 
 deploy:
   provider: script
