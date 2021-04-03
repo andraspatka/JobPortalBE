@@ -146,11 +146,7 @@ tory loaded from file:/app/libs/slf4j-simple-1.7.30.jar). -->
 						<image>openjdk:11.0.10-jdk-slim</image>
 					</from>
 					<to>
-						<image>registry.heroku.com/jobportal-be/web:${version}</image>
-						<auth>
-							<username>${env.HEROKU_LOGIN}</username>
-							<password>${env.HEROKU_API_KEY}</password>
-						</auth>
+						<image>registry.heroku.com/jobportal-be/web</image>
 					</to>
 					<container>
 						<ports>

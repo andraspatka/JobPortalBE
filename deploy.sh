@@ -9,6 +9,9 @@ VERSION_NAME="0.0.1-${TAG_NAME}"
 echo "Version ${VERSION_NAME}"
 ./mvnw versions:set -DnewVersion="${VERSION_NAME}"
 
+echo "Logging into Heroku"
+heroku container:login
+
 # Build and push docker image
 echo "Building and pushing docker image with JIB"
 ./mvnw compile jib:build
@@ -18,7 +21,7 @@ heroku container:release web --app $HEROKU_APP
 
 echo "Deployment successful. Tagging release"
 git status
-git revert pom.xml mvnw
+git restore pom.xml mvnw
 git checkout ${TRAVIS_BRANCH}
 git tag -a v0.0.1 -m "Release v${VERSION_NAME}"
 git push
