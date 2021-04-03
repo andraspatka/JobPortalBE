@@ -24,4 +24,4 @@ git status
 git restore pom.xml mvnw
 git checkout ${TRAVIS_BRANCH}
 git tag -a v0.0.1 -m "Release v${VERSION_NAME}"
-git push https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/JobPortalBE.git ${TRAVIS_BRANCH}
+git push --tags https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/JobPortalBE.git ${TRAVIS_BRANCH}
