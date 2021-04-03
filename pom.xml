@@ -118,6 +118,10 @@ tory loaded from file:/app/libs/slf4j-simple-1.7.30.jar). -->
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 
 		<!-- TEST Dependencies -->
 		<dependency>
@@ -142,10 +146,10 @@ tory loaded from file:/app/libs/slf4j-simple-1.7.30.jar). -->
 						<image>openjdk:11.0.10-jdk-slim</image>
 					</from>
 					<to>
-						<image>ghcr.io/andraspatka/jobportalbe:${version}</image>
+						<image>registry.heroku.com/jobportal-be/web</image>
 						<auth>
-							<username>${env.GITHUB_USER}</username>
-							<password>${env.GITHUB_TOKEN}</password>
+							<username>_</username>
+							<password>${env.HEROKU_API_KEY}</password>
 						</auth>
 					</to>
 					<container>
