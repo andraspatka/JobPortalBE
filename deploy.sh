@@ -9,7 +9,7 @@ VERSION_NAME="0.0.1-${TAG_NAME}"
 echo "Version ${VERSION_NAME}"
 ./mvnw versions:set -DnewVersion="${VERSION_NAME}"
 
-echo "Logging into Heroku"
+echo "Logging into Heroku container registry"
 heroku container:login
 
 # Build and push docker image
@@ -24,4 +24,4 @@ git status
 git restore pom.xml mvnw
 git checkout ${TRAVIS_BRANCH}
 git tag -a v0.0.1 -m "Release v${VERSION_NAME}"
-git push https://${GITHUB_TOKEN}@github.com/${GITHUB-USER}/JobPortalBE.git ${TRAVIS_BRANCH}
+git push https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/JobPortalBE.git ${TRAVIS_BRANCH}

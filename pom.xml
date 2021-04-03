@@ -142,6 +142,8 @@ tory loaded from file:/app/libs/slf4j-simple-1.7.30.jar). -->
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>2.8.0</version>
 				<configuration>
+<!--				Heroku container registry sometimes cant be verified -> jib wont push -->
+					<allowInsecureRegistries>true</allowInsecureRegistries>
 					<from>
 						<image>openjdk:11.0.10-jdk-slim</image>
 					</from>
