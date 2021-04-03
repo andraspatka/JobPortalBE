@@ -11,7 +11,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-            "schema": {
+              "schema": {
                 "$ref": "#/components/schemas/JwtRequest"
               }
             }
@@ -69,7 +69,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                    "$ref": "#/components/schemas/AuthenticationResponse"
+                  "$ref": "#/components/schemas/AuthenticationResponse"
                 }
               }
             }
@@ -122,6 +122,42 @@
           }
         }
       }
+    },
+    "/applications": {
+      "post": {
+        "description": "Save application in database .",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationsInformation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Application was successfully saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Posting or user invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -157,7 +193,7 @@
           "password": {
             "type": "string"
           },
-          "firstname":{
+          "firstname": {
             "type": "string"
           },
           "lastname": {
@@ -167,6 +203,29 @@
             "type": "string"
           },
           "company": {
+            "type": "string"
+          }
+        }
+      },
+      "ApplicationsInformation": {
+        "type": "object",
+        "properties": {
+          "post": {
+            "type": "object"
+          },
+          "user": {
+            "type": "object"
+          },
+          "dateApplied": {
+            "type": "string"
+          },
+          "experience": {
+            "type": "integer"
+          },
+          "workExperience": {
+            "type": "string"
+          },
+          "education": {
             "type": "string"
           }
         }

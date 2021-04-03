@@ -20,13 +20,13 @@ public class Applications {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id" )
-    private List<Postings> postId;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_APPLICATIONS_POSTING"), name = "posting_id")
+    private Postings post;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id" )
-    private List<User> userId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_APPLICATIONS_USER"), name = "user_id")
+    private User user;
 
     @Column(name = "date_applied")
     private Date dateApplied;
