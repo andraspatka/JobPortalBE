@@ -142,12 +142,11 @@ tory loaded from file:/app/libs/slf4j-simple-1.7.30.jar). -->
 						<image>openjdk:11.0.10-jdk-slim</image>
 					</from>
 					<to>
-<!--						<image>ghcr.io/andraspatka/jobportalbe:${version}</image>-->
-						<image>jobportal</image>
-<!--						<auth>-->
-<!--							<username>${env.GITHUB_USER}</username>-->
-<!--							<password>${env.GITHUB_TOKEN}</password>-->
-<!--						</auth>-->
+						<image>ghcr.io/andraspatka/jobportalbe:${version}</image>
+						<auth>
+							<username>${env.GITHUB_USER}</username>
+							<password>${env.GITHUB_TOKEN}</password>
+						</auth>
 					</to>
 					<container>
 						<ports>
