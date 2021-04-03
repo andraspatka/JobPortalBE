@@ -1,4 +1,5 @@
 #!/bin/bash
+git restore mvnw pom.xml
 curl https://cli-assets.heroku.com/install.sh | sh;  #install heroku
 docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com;  #login to registry.heroku.com
 docker push registry.heroku.com/$HEROKU_APP/web;
