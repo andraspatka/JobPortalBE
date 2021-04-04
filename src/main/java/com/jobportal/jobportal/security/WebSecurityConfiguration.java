@@ -1,9 +1,11 @@
 package com.jobportal.jobportal.security;
 
 import lombok.AllArgsConstructor;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.assertj.core.util.Lists;
 
 /**
  * Class containing the web security configuration.
@@ -28,7 +29,8 @@ import org.assertj.core.util.Lists;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String ALLOWED_ORIGINS = "http://localhost:4200";
+    private final Environment env;
+
     private static final String LOGIN_RESOURCE = "/login";
     private static final String USER_RESOURCE = "/users";
     private static final String REQUEST_RESOURCE = "/request";
@@ -69,7 +71,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Lists.newArrayList(ALLOWED_ORIGINS));
+        configuration.setAllowedOrigins(Lists.newArrayList(env.getProperty("security.cors.allowed-origin")));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
