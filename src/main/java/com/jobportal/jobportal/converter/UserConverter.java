@@ -27,4 +27,14 @@ public class UserConverter {
                 .role(userDto.getRole())
                 .build();
     }
+
+    public static UserDto convertUserEntityToDto(User user){
+        return UserDto.builder()
+                .firstName(user.getFirstName())
+                .password(user.getPassword())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+    }
 }
