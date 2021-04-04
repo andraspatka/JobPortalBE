@@ -40,13 +40,13 @@ function get_new_version() {
           NEW_VERSION="${major_version}.${minor_version}.${patch_version}"
       ;;
   esac
-  echo "New version: ${NEW_VERSION}"
+  return 0
 }
 
 echo "Calculating new version..."
 get_new_version ${RELEASE_TYPE}
 echo "New version is: ${NEW_VERSION}"
-exit 0; # TODO: remove as soon as tested in travis
+
 echo "Installing Heroku CLI"
 curl https://cli-assets.heroku.com/install.sh | sh
 
