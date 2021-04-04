@@ -1,4 +1,5 @@
 language: java
+sudo: required
 
 services:
   - postgresql
@@ -9,15 +10,17 @@ notifications:
 
 before_install:
   - chmod +x mvnw
-  - COMMITS_SINCE_MAIN=$(git rev-list --count HEAD)
-  - TAG_NAME="${TRAVIS_BRANCH}-m.${COMMITS_SINCE_MAIN}"
-  - VERSION_NAME="0.0.1-${TAG_NAME}"
-  - echo "Version ${VERSION_NAME}"
-  - ./mvnw versions:set -DnewVersion="${VERSION_NAME}"
+
 
 os: linux
 dist: bionic
 jdk: openjdk11
 script:
-  - ./mvnw test
-  - ./mvnw compile jib:build -Dversion="${VERSION_NAME}"
+  - ./mvnw test --no-transfer-progress
+
+deploy:
+  provider: script
+  script: bash deploy.sh
+  skip_cleanup: true
+  on:
+    branch: release

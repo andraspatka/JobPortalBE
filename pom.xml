@@ -97,6 +97,15 @@
 			<groupId>org.openapitools</groupId>
 			<artifactId>openapi-generator</artifactId>
 			<version>${openapi.generator.version}</version>
+<!--			Multiple implementations of SLF4J cause runtime errors. Excluding this transient dependency fixes the problem. -->
+<!--			java.lang.IllegalArgumentException: LoggerFactory is not a Logback LoggerContext but Logback is on the classpath. Either remove Logback or the competing implementation (class org.slf4j.impl.SimpleLoggerFac
+tory loaded from file:/app/libs/slf4j-simple-1.7.30.jar). -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!--SpringFox dependencies -->
 		<dependency>
@@ -108,6 +117,10 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<!-- TEST Dependencies -->
@@ -129,35 +142,39 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>2.8.0</version>
 				<configuration>
+<!--				Heroku container registry sometimes cant be verified -> jib wont push -->
+					<allowInsecureRegistries>true</allowInsecureRegistries>
 					<from>
-						<image>openjdk:8u282-jre-slim-buster</image>
+						<image>openjdk:11.0.10-jdk-slim</image>
 					</from>
 					<to>
-						<image>ghcr.io/andraspatka/jobportalbe:${version}</image>
-						<auth>
-							<username>${env.GITHUB_USER}</username>
-							<password>${env.GITHUB_TOKEN}</password>
-						</auth>
+						<image>registry.heroku.com/jobportal-be/web</image>
 					</to>
+					<container>
+						<ports>
+							<port>2222</port>
+						</ports>
+					</container>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<executions>
-					<!--			TODO Uncomment this if you want to see the OPEN API example-->
-					<!--					<execution>-->
-<!--						<goals>-->
-<!--							<goal>generate</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<inputSpec>${project.basedir}/src/main/resources/openapi/example.json</inputSpec>-->
-<!--							<output>${project.build.directory}/generated-sources</output>-->
-<!--							<apiPackage>${openapi.package}.api</apiPackage>-->
-<!--							<modelPackage>${openapi.package}.model</modelPackage>-->
-<!--						</configuration>-->
-<!--					</execution>-->
 					<execution>
+						<id>helloworld</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/example.json</inputSpec>
+							<output>${project.build.directory}/generated-sources</output>
+							<apiPackage>${openapi.package}.api</apiPackage>
+							<modelPackage>${openapi.package}.model</modelPackage>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jobportal</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>

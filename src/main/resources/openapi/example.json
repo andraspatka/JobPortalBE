@@ -10,34 +10,11 @@
         "description": "Returns a sample response.",
         "responses": {
           "200": {
-            "description": "A list of hellos.",
+            "description": "Returns a hello world response.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Hello"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/world": {
-      "get": {
-        "description": "Returns another type of sample response from another endpoint.",
-        "responses": {
-          "200": {
-            "description": "A list of worlds.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/World"
-                  }
+                  "$ref": "#/components/schemas/Hello"
                 }
               }
             }
@@ -54,17 +31,6 @@
           "id": {
             "type": "integer",
             "format": "int64"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "World": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
           },
           "message": {
             "type": "string"
