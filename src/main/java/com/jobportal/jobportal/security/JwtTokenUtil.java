@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +32,9 @@ public class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_USERNAME = "username";
     private static final String CLAIM_KEY_ID = "id";
 
-    //TODO put it in a security file
-    private static String SERVER_PASSWORD = "SuperSecret";
+    private final Environment env;
+
+    private static final String JWT_SECRET_KEY = "security.jwt.secret";
 
     private final AuthenticationService authenticationService;
 
@@ -71,7 +73,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(SERVER_PASSWORD).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(env.getProperty(JWT_SECRET_KEY)).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -84,7 +86,7 @@ public class JwtTokenUtil implements Serializable {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS512, SERVER_PASSWORD)
+                .signWith(SignatureAlgorithm.HS512, env.getProperty(JWT_SECRET_KEY))
                 .compact();
     }
 
