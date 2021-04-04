@@ -9,13 +9,13 @@ function get_new_version() {
       exit 1
   fi
 
-  num_tags=$(git tag | wc -w)
+  tags=($(git ls-remote --tags --refs origin | tr -d 'refs/tags/' | cut -f2)) # () -> convert to array
+  num_tags=${#tags[@]}
   if [[ ${num_tags} == 0 ]]; then
     NEW_VERSION="0.0.1"
     return 0
   fi
 
-  tags=($(git tag)) # () -> convert to array
   latest_version=${tags[${#tags[@]}-1]} # alphabetical order, could cause problems: e.g. 1.1.0, 1.10.0, 1.2.0
   version_numbers=($(echo ${latest_version} | tr -d 'v' | tr '.' ' '))
 
@@ -40,11 +40,12 @@ function get_new_version() {
           NEW_VERSION="${major_version}.${minor_version}.${patch_version}"
       ;;
   esac
-  echo "New version: ${NEW_VERSION}"
+  return 0
 }
 
 echo "Calculating new version..."
 get_new_version ${RELEASE_TYPE}
+echo "New version is: ${NEW_VERSION}"
 
 echo "Installing Heroku CLI"
 curl https://cli-assets.heroku.com/install.sh | sh
