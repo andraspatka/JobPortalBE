@@ -1,10 +1,11 @@
 package com.jobportal.jobportal.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -12,23 +13,23 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Postings")
-public class Postings {
+@Table(name = "Posting")
+public class Posting {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id" )
-    private List<User> postedBy;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_POSTEDBY_USER"), name = "posted_by")
+    private User postedBy;
 
     @Column(name = "posted_at")
-    private Date postedAt;
+    private LocalDate postedAt;
 
     @Column(name = "deadline")
-    private Date  deadline;
+    private LocalDate  deadline;
 
     @Column(name = "number_of_views")
     private long numberOfViews;
@@ -39,9 +40,9 @@ public class Postings {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id" )
-    private List<Categories> categoryId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_CATEGORYID_CATEGORIES"), name = "category_id")
+    private Category category;
 
     @Column(name = "requirements")
     private String requirements;

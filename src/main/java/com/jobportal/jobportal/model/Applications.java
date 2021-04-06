@@ -22,7 +22,7 @@ public class Applications {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id" )
-    private List<Postings> postId;
+    private List<Posting> postId;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id" )

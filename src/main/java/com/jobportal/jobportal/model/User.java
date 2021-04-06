@@ -58,4 +58,8 @@ public class User {
 
     @OneToOne(mappedBy = "admin")
     private Company conductedCompany;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postedBy")
+    @Builder.Default
+    private Set<Posting> postings = new HashSet<>();
 }
