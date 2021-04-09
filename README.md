@@ -67,17 +67,36 @@ For an example, please look at:
 - HelloController.java
 - WorldController.java
 
+## Branching concept
+
+There are 3 types of branches:
+- feature branch: short lived, includes the implementation of a smaller feature, after the feature is complete, a PR is opened and it is eventually merged into main
+- main: main branch, all feature branches get merged into this branch
+- release: release branch, the CD build is started when there are changes on this branch.
+
+Overview:
+
+![Branching](docs/Branching.png)
+
 ## Ci/CD
 
 Techstack:
 - Ci: Travis
 - Platform for deployments: Heroku
 
-On each commit, the tests are ran and a dockerimage is created and pushed to the Github Container registry "jobportalbe".
+On each commit, the tests are ran.
+
+On each commit of the release branch, the tests are ran, a docker image is created and pushed into the Heroku container registry, and the application is deployed to Heroku.
 
 Overview:
 
 ![Ci Concept](docs/CiCdConcept.png)
 
-Versioning concept: major.minor.patch-branchName-m.numberOfCommits
-example: 0.0.1-main-m.34
+### Creating a release version
+
+The following steps need to be followed in order to create and deploy a new version:
+
+- Decide the release type: major, minor, patch
+- Set the RELEASE_TYPE environment variable in TravisCi
+    - https://travis-ci.com/github/andraspatka/JobPortalBE/settings
+- Merge "main" into "release"
