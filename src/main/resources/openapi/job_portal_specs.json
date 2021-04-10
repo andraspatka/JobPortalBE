@@ -332,6 +332,31 @@
             }
           }
         }
+      },
+      "get": {
+        "summary": "Finds a posting after its id.",
+        "responses": {
+          "200": {
+            "description": "Posting was found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostingsInformationComplete"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "No posting with the given id was found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostingsInformationComplete"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },

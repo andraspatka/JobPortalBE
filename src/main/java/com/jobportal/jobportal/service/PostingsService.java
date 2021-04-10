@@ -14,6 +14,7 @@ import com.jobportal.jobportal.repository.CategoryRepository;
 import com.jobportal.jobportal.repository.PostingRepository;
 import com.jobportal.jobportal.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +73,22 @@ public class PostingsService {
             postingRepository.delete(posting);
         } else {
             throw new PostingNotExistingException("Posting with given id does not exists");
+        }
+    }
+
+    /**
+     * Finds a posting after its is.
+     *
+     * @param id of the {@link Posting}
+     * @return the found {@link Posting}
+     * @throws PostingNotExistingException if no posting was found
+     * */
+    public PostingCompleteDto findPostingById(@NonNull Long id) {
+        Optional<Posting> posting = postingRepository.findById(id);
+        if (posting.isPresent()) {
+            return PostingsConverter.convertPostingEntityToCompleteDto(posting.get());
+        } else {
+            throw new PostingNotExistingException("No posting with the given id was found.");
         }
     }
 

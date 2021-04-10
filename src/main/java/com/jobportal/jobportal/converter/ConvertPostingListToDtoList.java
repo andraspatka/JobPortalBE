@@ -14,18 +14,19 @@ import java.util.List;
 
 /**
  * Dto for transforming a list of Posting Object to list of PostingDto objects
+ *
  * @since 04.04.2021
  */
 @UtilityClass
 public class ConvertPostingListToDtoList implements Serializable {
 
     public static List<PostingCompleteDto> toDtoList(List<Posting> all) {
-        if ( all == null ) {
+        if (all == null) {
             return null;
         }
-        List<PostingCompleteDto> list = new ArrayList<>( all.size() );
-        for ( Posting postings : all ) {
-            list.add( PostingsConverter.convertPostingEntityToCompleteDto( postings ) );
+        List<PostingCompleteDto> list = new ArrayList<>(all.size());
+        for (Posting postings : all) {
+            list.add(PostingsConverter.convertPostingEntityToCompleteDto(postings));
         }
 
         return list;

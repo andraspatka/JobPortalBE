@@ -2,7 +2,6 @@ package com.jobportal.jobportal.converter;
 
 import com.jobportal.jobportal.dto.PostingCompleteDto;
 import com.jobportal.jobportal.dto.PostingDto;
-import com.jobportal.openapi.model.PostingsInformation;
 import com.jobportal.openapi.model.PostingsInformationComplete;
 import lombok.experimental.UtilityClass;
 
@@ -15,7 +14,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class DtoToPostingInformation {
 
-    public static PostingsInformationComplete convertPostingsDtoToPostingInformationOpenApi(PostingCompleteDto postingDto){
+    public static PostingsInformationComplete convertPostingsDtoToPostingInformationOpenApi(PostingCompleteDto postingDto) {
         PostingsInformationComplete postingsInformation = new PostingsInformationComplete();
         postingsInformation.setId(postingDto.getId());
         postingsInformation.setPostedById(postingDto.getPostedBy());
