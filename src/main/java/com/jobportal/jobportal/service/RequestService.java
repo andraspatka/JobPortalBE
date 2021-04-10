@@ -1,8 +1,13 @@
 package com.jobportal.jobportal.service;
 
+import com.jobportal.jobportal.converter.RequestConverter;
+import com.jobportal.jobportal.dto.RequestDto;
 import com.jobportal.jobportal.exceptions.CompanyNotExistingException;
+import com.jobportal.jobportal.exceptions.InvalidRoleException;
 import com.jobportal.jobportal.exceptions.RequestException;
+import com.jobportal.jobportal.exceptions.UnknownUserException;
 import com.jobportal.jobportal.model.Request;
+import com.jobportal.jobportal.model.Role;
 import com.jobportal.jobportal.model.User;
 import com.jobportal.jobportal.repository.RequestRepository;
 import com.jobportal.jobportal.repository.UserRepository;
@@ -15,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles the operations related to a {@link Request}
@@ -46,6 +53,29 @@ public class RequestService {
             } else {
                 throw new CompanyNotExistingException("No company for this user was found.");
             }
+        }
+    }
+
+    /**
+     * Loads all the unapproved requests for an admin.
+     *
+     * @param email of the admin who's requests must be found
+     * @return set containing all the unapproved requests for the admin
+     * */
+    public Set<RequestDto> getUnapprovedRequestsForAdmin(@NotNull String email) {
+        Optional<User> admin = userRepository.findUserByEmail(email);
+        if (admin.isPresent()) {
+            if (Role.ADMIN.equals(admin.get().getRole())) {
+                Set<Request> requests = requestRepository.findAllByApprovedBy(admin.get())
+                        .stream()
+                        .filter(request -> Objects.isNull(request.getApprovedOn()))
+                        .collect(Collectors.toSet());
+                return RequestConverter.convertEntitiesToDtos(requests);
+            } else {
+                throw new InvalidRoleException("The user with the given id is not an admin.");
+            }
+        } else {
+            throw new UnknownUserException("Admin with the given does not exist.");
         }
     }
 

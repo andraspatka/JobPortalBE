@@ -7,13 +7,12 @@ import com.jobportal.jobportal.model.Posting;
 import lombok.experimental.UtilityClass;
 
 /**
- * Converter class for tranforming a
+ * Converter class for transforming a
  * {@link Posting} to a {@link PostingDto} and vice versa
  * @since 03.04.2021
  */
 @UtilityClass
 public class PostingsConverter {
-
 
     public static Posting convertPostingsDtoToEntity(PostingDto postingDto){
 

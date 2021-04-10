@@ -48,12 +48,10 @@ public class PostingsController implements PostingsApi {
 
 
     /**
-     *
-     * @return ResponseEntity<List<PostingsInformation>>
+     * @return ResponseEntity<List < PostingsInformation>>
      */
     @Override
     public ResponseEntity<List<PostingsInformationComplete>> postingsGet() {
-
         List<PostingCompleteDto> list = postingsService.getListOfPostings();
         List<PostingsInformationComplete> result = new ArrayList<>();
         list.forEach(posting -> {
@@ -65,20 +63,19 @@ public class PostingsController implements PostingsApi {
     }
 
     /**
-     *
-     * @param id  (required)
+     * @param id (required)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
     public ResponseEntity<AuthenticationResponse> postingsIdDelete(Long id) {
 
-        try{
+        try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.deletePosting(id);
             response.setBody(POSTING_DELETED_MESSAGE);
             response.setStatus(HttpStatus.OK);
             return ResponseEntity.ok(response);
-        }catch (PostingNotExistingException e){
+        } catch (PostingNotExistingException e) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(POSTING_NOT_DELETED_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
@@ -87,8 +84,7 @@ public class PostingsController implements PostingsApi {
     }
 
     /**
-     *
-     * @param postingInformationForUpdate  (optional)
+     * @param postingInformationForUpdate (optional)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
@@ -101,23 +97,22 @@ public class PostingsController implements PostingsApi {
                 .description(postingInformationForUpdate.getDescription())
                 .requirements(postingInformationForUpdate.getRequirements())
                 .build();
-            try{
-                AuthenticationResponse response = new AuthenticationResponse();
-                postingsService.editPosting(postingDto);
-                response.setBody(POSTING_EDITED_MESSAGE);
-                response.setStatus(HttpStatus.OK);
-                return ResponseEntity.ok(response);
-            }catch (PostingNotExistingException e){
-                AuthenticationResponse response = new AuthenticationResponse();
-                response.setBody(POSTING_NOT_EDITED_MESSAGE);
-                response.setStatus(HttpStatus.UNAUTHORIZED);
-                return ResponseEntity.ok(response);
-            }
+        try {
+            AuthenticationResponse response = new AuthenticationResponse();
+            postingsService.editPosting(postingDto);
+            response.setBody(POSTING_EDITED_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
+        } catch (PostingNotExistingException e) {
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(POSTING_NOT_EDITED_MESSAGE);
+            response.setStatus(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.ok(response);
+        }
     }
 
     /**
-     *
-     * @param postingsInformation  (optional)
+     * @param postingsInformation (optional)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
@@ -133,13 +128,14 @@ public class PostingsController implements PostingsApi {
                 .category(postingsInformation.getCategoryId())
                 .requirements(postingsInformation.getRequirements())
                 .build();
-        try{
+        try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.addPosting(postingDto);
             response.setBody(POSTING_ADDED_MESSAGE);
             response.setStatus(HttpStatus.OK);
             return ResponseEntity.ok(response);
-        }catch (PostingNotAddedException | PostingAlreadyExistsException | PostingNotExistingException | CategoryNotExistingException e){
+        } catch (PostingNotAddedException | PostingAlreadyExistsException
+                | PostingNotExistingException | CategoryNotExistingException e) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(POSTING_NOT_ADDED_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
