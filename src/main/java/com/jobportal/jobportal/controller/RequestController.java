@@ -9,6 +9,7 @@ import com.jobportal.jobportal.exceptions.UnknownUserException;
 import com.jobportal.jobportal.service.RequestService;
 import com.jobportal.openapi.api.RequestApi;
 import com.jobportal.openapi.model.EmployerRequest;
+import com.jobportal.openapi.model.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -33,13 +36,15 @@ import java.util.Set;
 public class RequestController implements RequestApi {
 
     private static final String REQUEST_SENT_MESSAGE = "Request has been successfully sent to the admin.";
+    private static final String REQUEST_UPDATED_MESSAGE = "Request has been successfully updated.";
 
     private final RequestService requestService;
 
     /**
      * {@inheritDoc}
+     *
      * @param email of the admin
-     * */
+     */
     @Override
     public ResponseEntity<List<EmployerRequest>> requestEmailGet(String email) {
         try {
@@ -63,5 +68,21 @@ public class RequestController implements RequestApi {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(exception.getMessage());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<String> requestPatch(@Valid RequestStatus requestStatus) {
+        Objects.requireNonNull(requestStatus);
+        try {
+            requestService.updateRequestStatus(requestStatus.getId(), requestStatus.getStatus());
+            return ResponseEntity.ok(REQUEST_UPDATED_MESSAGE);
+        } catch (RequestException exception) {
+            log.error(exception.getMessage());
+            return ResponseEntity.ok(exception.getMessage());
+        }
+
     }
 }
