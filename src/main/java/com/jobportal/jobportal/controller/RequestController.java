@@ -8,6 +8,7 @@ import com.jobportal.jobportal.exceptions.RequestException;
 import com.jobportal.jobportal.exceptions.UnknownUserException;
 import com.jobportal.jobportal.service.RequestService;
 import com.jobportal.openapi.api.RequestApi;
+import com.jobportal.openapi.model.AuthenticationResponse;
 import com.jobportal.openapi.model.EmployerRequest;
 import com.jobportal.openapi.model.RequestStatus;
 import lombok.AllArgsConstructor;
@@ -74,14 +75,20 @@ public class RequestController implements RequestApi {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<String> requestPatch(@Valid RequestStatus requestStatus) {
+    public ResponseEntity<AuthenticationResponse> requestPatch(@Valid RequestStatus requestStatus) {
         Objects.requireNonNull(requestStatus);
         try {
+            AuthenticationResponse response = new AuthenticationResponse();
             requestService.updateRequestStatus(requestStatus.getId(), requestStatus.getStatus());
-            return ResponseEntity.ok(REQUEST_UPDATED_MESSAGE);
+            response.setBody(REQUEST_UPDATED_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (RequestException exception) {
             log.error(exception.getMessage());
-            return ResponseEntity.ok(exception.getMessage());
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(exception.getMessage());
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
         }
 
     }
