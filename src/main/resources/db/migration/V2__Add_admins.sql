@@ -4,3 +4,5 @@ values ('Jobportal','Admin',2,'job.portal@gmail.com','$2a$10$k6dWXP82L3f1dp6//Zo
 
 insert into company(name, admin_id) values ('Bosch', 1),('Ntt Data', 2);
 
+update users set company=1 where id=1;
+update users set company=2 where id=2;
