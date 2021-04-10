@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
 
 /**
@@ -31,8 +32,7 @@ public class CategoryController implements CategoriesApi {
     private final CategoryService categoryService;
 
     /**
-     *
-     * @param categoriesInformation  (optional)
+     * @param categoriesInformation (optional)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
@@ -41,13 +41,13 @@ public class CategoryController implements CategoriesApi {
                 .builder()
                 .name(categoriesInformation.getName())
                 .build();
-        try{
+        try {
             AuthenticationResponse response = new AuthenticationResponse();
             categoryService.addCategory(categoryDto);
             response.setBody(CATEGORY_ADDED_MESSAGE);
             response.setStatus(HttpStatus.OK);
             return ResponseEntity.ok(response);
-        }catch (CategoryAlreadyExistsException | CategoryNotAddedException e){
+        } catch (CategoryAlreadyExistsException | CategoryNotAddedException e) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(CATEGORY_NOT_ADDED_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
