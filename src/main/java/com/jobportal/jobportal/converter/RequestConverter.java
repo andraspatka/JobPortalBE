@@ -3,6 +3,7 @@ package com.jobportal.jobportal.converter;
 import com.jobportal.jobportal.dto.RequestDto;
 import com.jobportal.jobportal.model.Request;
 import com.jobportal.openapi.model.EmployerRequest;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -31,22 +32,24 @@ public class RequestConverter {
                 .collect(Collectors.toList());
     }
 
-    private static EmployerRequest convertDtoToJson(RequestDto request) {
+    private static EmployerRequest convertDtoToJson(@NonNull RequestDto request) {
         EmployerRequest employerRequest = new EmployerRequest();
         employerRequest.setId(request.getId());
         employerRequest.setRequestedByEmail(request.getRequestedByEmail());
         employerRequest.setRequestedByFirstName(request.getRequestedByFirstName());
         employerRequest.setRequestedByLastName(request.getRequestedByLastName());
+        employerRequest.setStatus(request.getStatus());
         return employerRequest;
     }
 
-    private static RequestDto convertEntityToDto(Request request) {
+    private static RequestDto convertEntityToDto(@NonNull Request request) {
         Objects.requireNonNull(request.getRequestedBy());
         return RequestDto.builder()
                 .id(request.getId())
                 .requestedByFirstName(request.getRequestedBy().getFirstName())
                 .requestedByLastName(request.getRequestedBy().getLastName())
                 .requestedByEmail(request.getRequestedBy().getEmail())
+                .status(request.getStatus().toString())
                 .build();
     }
 }

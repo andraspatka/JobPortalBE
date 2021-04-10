@@ -20,4 +20,5 @@ public class RequestDto implements Serializable {
     private final String requestedByFirstName;
     private final String requestedByLastName;
     private final String requestedByEmail;
+    private final String status;
 }
