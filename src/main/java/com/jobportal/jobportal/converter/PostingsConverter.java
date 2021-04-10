@@ -4,19 +4,18 @@ package com.jobportal.jobportal.converter;
 import com.jobportal.jobportal.dto.PostingCompleteDto;
 import com.jobportal.jobportal.dto.PostingDto;
 import com.jobportal.jobportal.model.Posting;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 /**
- * Converter class for tranforming a
+ * Converter class for transforming a
  * {@link Posting} to a {@link PostingDto} and vice versa
  * @since 03.04.2021
  */
 @UtilityClass
 public class PostingsConverter {
 
-
-    public static Posting convertPostingsDtoToEntity(PostingDto postingDto){
-
+    public static Posting convertPostingsDtoToEntity(@NonNull PostingDto postingDto){
         return Posting.builder()
                 .postedAt(postingDto.getPostedAt())
                 .deadline(postingDto.getDeadline())
@@ -27,8 +26,7 @@ public class PostingsConverter {
                 .build();
     }
 
-    public static PostingDto convertPostingEntityToDto(Posting posting) {
-
+    public static PostingDto convertPostingEntityToDto(@NonNull Posting posting) {
         return PostingDto.builder()
                 .postedBy(posting.getPostedBy().getId())
                 .postedAt(posting.getPostedAt())
@@ -41,7 +39,7 @@ public class PostingsConverter {
                 .build();
     }
 
-    public static PostingCompleteDto convertPostingEntityToCompleteDto(Posting posting){
+    public static PostingCompleteDto convertPostingEntityToCompleteDto(@NonNull Posting posting){
         return PostingCompleteDto.builder()
                 .id(posting.getId())
                 .postedBy(posting.getPostedBy().getId())

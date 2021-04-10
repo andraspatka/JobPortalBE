@@ -15,6 +15,7 @@ import com.jobportal.openapi.model.PostingInformationForUpdate;
 import com.jobportal.openapi.model.PostingsInformation;
 import com.jobportal.openapi.model.PostingsInformationComplete;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Controller CRUD Operations for Postings
@@ -44,16 +46,15 @@ public class PostingsController implements PostingsApi {
     private static final String POSTING_NOT_DELETED_MESSAGE = "Posting could not be deleted";
     private static final String POSTINGS_FETCHED_MESSAGE = "Posting list returned successfully";
     private static final String POSTINGS_NOT_FETCHED_MESSAGE = "Posting list not returned";
+
     private final PostingsService postingsService;
 
 
     /**
-     *
-     * @return ResponseEntity<List<PostingsInformation>>
+     * @return ResponseEntity<List < PostingsInformation>>
      */
     @Override
     public ResponseEntity<List<PostingsInformationComplete>> postingsGet() {
-
         List<PostingCompleteDto> list = postingsService.getListOfPostings();
         List<PostingsInformationComplete> result = new ArrayList<>();
         list.forEach(posting -> {
@@ -65,20 +66,18 @@ public class PostingsController implements PostingsApi {
     }
 
     /**
-     *
-     * @param id  (required)
+     * @param id (required)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
     public ResponseEntity<AuthenticationResponse> postingsIdDelete(Long id) {
-
-        try{
+        try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.deletePosting(id);
             response.setBody(POSTING_DELETED_MESSAGE);
             response.setStatus(HttpStatus.OK);
             return ResponseEntity.ok(response);
-        }catch (PostingNotExistingException e){
+        } catch (PostingNotExistingException e) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(POSTING_NOT_DELETED_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
@@ -86,38 +85,41 @@ public class PostingsController implements PostingsApi {
         }
     }
 
-    /**
-     *
-     * @param postingInformationForUpdate  (optional)
-     * @return ResponseEntity<AuthenticationResponse>
-     */
     @Override
-    public ResponseEntity<AuthenticationResponse> postingsPatch(@Valid PostingInformationForUpdate postingInformationForUpdate) {
-
-        final PostingSimpleDto postingDto = PostingSimpleDto.builder()
-                .id(postingInformationForUpdate.getId())
-                .deadline(postingInformationForUpdate.getDeadline())
-                .name(postingInformationForUpdate.getName())
-                .description(postingInformationForUpdate.getDescription())
-                .requirements(postingInformationForUpdate.getRequirements())
-                .build();
-            try{
-                AuthenticationResponse response = new AuthenticationResponse();
-                postingsService.editPosting(postingDto);
-                response.setBody(POSTING_EDITED_MESSAGE);
-                response.setStatus(HttpStatus.OK);
-                return ResponseEntity.ok(response);
-            }catch (PostingNotExistingException e){
-                AuthenticationResponse response = new AuthenticationResponse();
-                response.setBody(POSTING_NOT_EDITED_MESSAGE);
-                response.setStatus(HttpStatus.UNAUTHORIZED);
-                return ResponseEntity.ok(response);
-            }
+    public ResponseEntity<PostingsInformationComplete> postingsIdGet(@NonNull Long id) {
+        try {
+            PostingCompleteDto postingDto = postingsService.findPostingById(id);
+            return ResponseEntity.ok(DtoToPostingInformation
+                    .convertPostingsDtoToPostingInformationOpenApi(postingDto));
+        } catch (PostingNotExistingException exception) {
+            return ResponseEntity.ok(new PostingsInformationComplete());
+        }
     }
 
     /**
-     *
-     * @param postingsInformation  (optional)
+     * @param postingInformationForUpdate (optional)
+     * @return ResponseEntity<AuthenticationResponse>
+     */
+    @Override
+    public ResponseEntity<AuthenticationResponse> postingsPatch(
+            @Valid PostingInformationForUpdate postingInformationForUpdate) {
+        final PostingSimpleDto postingDto = buildSimplePostingDto(postingInformationForUpdate);
+        try {
+            AuthenticationResponse response = new AuthenticationResponse();
+            postingsService.editPosting(postingDto);
+            response.setBody(POSTING_EDITED_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
+        } catch (PostingNotExistingException e) {
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(POSTING_NOT_EDITED_MESSAGE);
+            response.setStatus(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    /**
+     * @param postingsInformation (optional)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
@@ -133,17 +135,28 @@ public class PostingsController implements PostingsApi {
                 .category(postingsInformation.getCategoryId())
                 .requirements(postingsInformation.getRequirements())
                 .build();
-        try{
+        try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.addPosting(postingDto);
             response.setBody(POSTING_ADDED_MESSAGE);
             response.setStatus(HttpStatus.OK);
             return ResponseEntity.ok(response);
-        }catch (PostingNotAddedException | PostingAlreadyExistsException | PostingNotExistingException | CategoryNotExistingException e){
+        } catch (PostingNotAddedException | PostingAlreadyExistsException
+                | PostingNotExistingException | CategoryNotExistingException e) {
             AuthenticationResponse response = new AuthenticationResponse();
             response.setBody(POSTING_NOT_ADDED_MESSAGE);
             response.setStatus(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.ok(response);
         }
+    }
+
+    private PostingSimpleDto buildSimplePostingDto(@Valid PostingInformationForUpdate postingInformationForUpdate) {
+        return PostingSimpleDto.builder()
+                .id(postingInformationForUpdate.getId())
+                .deadline(postingInformationForUpdate.getDeadline())
+                .name(postingInformationForUpdate.getName())
+                .description(postingInformationForUpdate.getDescription())
+                .requirements(postingInformationForUpdate.getRequirements())
+                .build();
     }
 }

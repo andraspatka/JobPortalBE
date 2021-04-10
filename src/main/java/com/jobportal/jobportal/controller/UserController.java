@@ -38,14 +38,7 @@ public class UserController implements UsersApi {
      */
     @Override
     public ResponseEntity<AuthenticationResponse> usersPost(@Valid UserInformation userInformation) {
-        final UserDto userDto = UserDto.builder()
-                .email(userInformation.getEmail())
-                .password(userInformation.getPassword())
-                .firstName(userInformation.getFirstname())
-                .lastName(userInformation.getLastname())
-                .company(userInformation.getCompany())
-                .role(Role.valueOf(userInformation.getRole()))
-                .build();
+        final UserDto userDto = buildUserDto(userInformation);
         try {
             userService.addUser(userDto);
             AuthenticationResponse response = new AuthenticationResponse();
@@ -58,5 +51,16 @@ public class UserController implements UsersApi {
             response.setStatus(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.ok(response);
         }
+    }
+
+    private UserDto buildUserDto(@Valid UserInformation userInformation) {
+        return UserDto.builder()
+                .email(userInformation.getEmail())
+                .password(userInformation.getPassword())
+                .firstName(userInformation.getFirstname())
+                .lastName(userInformation.getLastname())
+                .company(userInformation.getCompany())
+                .role(Role.valueOf(userInformation.getRole()))
+                .build();
     }
 }

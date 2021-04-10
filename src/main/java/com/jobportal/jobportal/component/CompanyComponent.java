@@ -17,12 +17,21 @@ import java.util.Objects;
  * Handles the operations related to a {@link Company}
  *
  * @since 27.03.2021
- * */
+ */
 @Component
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class CompanyComponent {
 
     private final CompanyRepository companyRepository;
+
+    /**
+     * Loads all the companies of the Job Portal.
+     *
+     * @return list of companies
+     */
+    public List<Company> loadCompanies() {
+        return companyRepository.findAll();
+    }
 
     /**
      * Adds a user to a company if the name of the company is present
