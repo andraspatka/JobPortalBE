@@ -31,9 +31,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final Environment env;
 
+    // everyone is allowed to log in in the application
     private static final String LOGIN_RESOURCE = "/login";
+    // everyone is allowed to register in the application
     private static final String USER_RESOURCE = "/users";
+    //TODO remove
     private static final String REQUEST_RESOURCE = "/request";
+    // Companies resource is only used in the register form, so everyone is allowed to use it
     private static final String COMPANY_RESOURCE = "/companies";
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
