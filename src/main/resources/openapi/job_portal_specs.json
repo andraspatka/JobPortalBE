@@ -206,6 +206,24 @@
             }
           }
         }
+      },
+      "get": {
+        "description": "Loads all the available categories of the postings.",
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoriesInformation"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/postings": {
