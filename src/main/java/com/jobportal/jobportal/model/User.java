@@ -62,4 +62,8 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postedBy")
     @Builder.Default
     private Set<Posting> postings = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @Builder.Default
+    private Set<Application> applications = new HashSet<>();
 }
