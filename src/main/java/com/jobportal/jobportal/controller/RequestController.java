@@ -61,13 +61,19 @@ public class RequestController implements RequestApi {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<String> requestEmailPost(String email) {
+    public ResponseEntity<AuthenticationResponse> requestEmailPost(String email) {
         try {
+            AuthenticationResponse response = new AuthenticationResponse();
             requestService.sendRequestToBecomeAnEmployer(email);
-            return ResponseEntity.ok(REQUEST_SENT_MESSAGE);
+            response.setBody(REQUEST_SENT_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (CompanyNotExistingException | RequestException exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(exception.getMessage());
+            log.error(exception.getMessage());
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(exception.getMessage());
+            response.setStatus(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(response);
         }
     }
 

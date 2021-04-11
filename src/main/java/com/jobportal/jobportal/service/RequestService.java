@@ -95,6 +95,9 @@ public class RequestService {
             Request request = requestOptional.get();
             if (!RequestStatus.valueOf(status).equals(request.getStatus())) {
                 request.setStatus(RequestStatus.valueOf(status));
+                if(RequestStatus.APPROVED.equals(request.getStatus())){
+                    request.getRequestedBy().setRole(Role.EMPLOYER);
+                }
                 request.setApprovedOn(LocalDate.now().toDate());
                 requestRepository.save(request);
             } else {
