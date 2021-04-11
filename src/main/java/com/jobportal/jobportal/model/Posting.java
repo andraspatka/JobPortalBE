@@ -1,11 +1,11 @@
 package com.jobportal.jobportal.model;
 
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -46,4 +46,8 @@ public class Posting {
 
     @Column(name = "requirements")
     private String requirements;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posting")
+    @Builder.Default
+    private Set<Application> applications = new HashSet<>();
 }

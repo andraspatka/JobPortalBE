@@ -402,6 +402,132 @@
           }
         }
       }
+    },
+    "/applications": {
+      "post": {
+        "description": "Add a new application for a posting.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationInformation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Posting was successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Deletes an application for a given posting.",
+        "responses": {
+          "200": {
+            "description": "Application was successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Something went wrong. Application could not be deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/user/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ],
+      "get": {
+        "description": "Returns all the applications for a given user.",
+        "responses": {
+          "200": {
+            "description": "Applications were successfully found for the admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicationInformation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/posting/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ],
+      "get": {
+        "description": "Returns all the applications for a given posting.",
+        "responses": {
+          "200": {
+            "description": "Applications were successfully found for the posting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicationInformation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -591,6 +717,32 @@
           },
           "status": {
             "type": "string"
+          }
+        }
+      },
+      "ApplicationInformation": {
+        "type": "object",
+        "properties": {
+          "numberYearsExperience": {
+            "type":"integer",
+            "format": "int32"
+          },
+          "workingExperience": {
+            "type": "string"
+          },
+          "education":{
+            "type": "string"
+          },
+          "applicationDate": {
+            "type": "string"
+          },
+          "applicantId": {
+            "type":"integer",
+            "format": "int64"
+          },
+          "postingId": {
+            "type":"integer",
+            "format": "int64"
           }
         }
       }
