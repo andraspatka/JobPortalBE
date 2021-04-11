@@ -8,7 +8,9 @@ import com.jobportal.jobportal.exceptions.RequestException;
 import com.jobportal.jobportal.exceptions.UnknownUserException;
 import com.jobportal.jobportal.service.RequestService;
 import com.jobportal.openapi.api.RequestApi;
+import com.jobportal.openapi.model.AuthenticationResponse;
 import com.jobportal.openapi.model.EmployerRequest;
+import com.jobportal.openapi.model.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -33,13 +37,15 @@ import java.util.Set;
 public class RequestController implements RequestApi {
 
     private static final String REQUEST_SENT_MESSAGE = "Request has been successfully sent to the admin.";
+    private static final String REQUEST_UPDATED_MESSAGE = "Request has been successfully updated.";
 
     private final RequestService requestService;
 
     /**
      * {@inheritDoc}
+     *
      * @param email of the admin
-     * */
+     */
     @Override
     public ResponseEntity<List<EmployerRequest>> requestEmailGet(String email) {
         try {
@@ -55,13 +61,41 @@ public class RequestController implements RequestApi {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<String> requestEmailPost(String email) {
+    public ResponseEntity<AuthenticationResponse> requestEmailPost(String email) {
         try {
+            AuthenticationResponse response = new AuthenticationResponse();
             requestService.sendRequestToBecomeAnEmployer(email);
-            return ResponseEntity.ok(REQUEST_SENT_MESSAGE);
+            response.setBody(REQUEST_SENT_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (CompanyNotExistingException | RequestException exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(exception.getMessage());
+            log.error(exception.getMessage());
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(exception.getMessage());
+            response.setStatus(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(response);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<AuthenticationResponse> requestPatch(@Valid RequestStatus requestStatus) {
+        Objects.requireNonNull(requestStatus);
+        try {
+            AuthenticationResponse response = new AuthenticationResponse();
+            requestService.updateRequestStatus(requestStatus.getId(), requestStatus.getStatus());
+            response.setBody(REQUEST_UPDATED_MESSAGE);
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
+        } catch (RequestException exception) {
+            log.error(exception.getMessage());
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setBody(exception.getMessage());
+            response.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok(response);
+        }
+
     }
 }

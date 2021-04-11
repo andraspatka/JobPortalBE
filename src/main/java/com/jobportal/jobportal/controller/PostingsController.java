@@ -15,6 +15,7 @@ import com.jobportal.openapi.model.PostingInformationForUpdate;
 import com.jobportal.openapi.model.PostingsInformation;
 import com.jobportal.openapi.model.PostingsInformationComplete;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,7 @@ public class PostingsController implements PostingsApi {
     private static final String POSTING_NOT_EDITED_MESSAGE = "Posting could not be edited";
     private static final String POSTING_DELETED_MESSAGE = "Posting was successfully deleted";
     private static final String POSTING_NOT_DELETED_MESSAGE = "Posting could not be deleted";
-    private static final String POSTINGS_FETCHED_MESSAGE = "Posting list returned successfully";
-    private static final String POSTINGS_NOT_FETCHED_MESSAGE = "Posting list not returned";
+
     private final PostingsService postingsService;
 
 
@@ -55,7 +55,8 @@ public class PostingsController implements PostingsApi {
         List<PostingCompleteDto> list = postingsService.getListOfPostings();
         List<PostingsInformationComplete> result = new ArrayList<>();
         list.forEach(posting -> {
-            PostingsInformationComplete postingsInformation = DtoToPostingInformation.convertPostingsDtoToPostingInformationOpenApi(posting);
+            PostingsInformationComplete postingsInformation = DtoToPostingInformation
+                    .convertPostingsDtoToPostingInformationOpenApi(posting);
             result.add(postingsInformation);
 
         });
@@ -68,7 +69,6 @@ public class PostingsController implements PostingsApi {
      */
     @Override
     public ResponseEntity<AuthenticationResponse> postingsIdDelete(Long id) {
-
         try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.deletePosting(id);
@@ -83,20 +83,25 @@ public class PostingsController implements PostingsApi {
         }
     }
 
+    @Override
+    public ResponseEntity<PostingsInformationComplete> postingsIdGet(@NonNull Long id) {
+        try {
+            PostingCompleteDto postingDto = postingsService.findPostingById(id);
+            return ResponseEntity.ok(DtoToPostingInformation
+                    .convertPostingsDtoToPostingInformationOpenApi(postingDto));
+        } catch (PostingNotExistingException exception) {
+            return ResponseEntity.ok(new PostingsInformationComplete());
+        }
+    }
+
     /**
      * @param postingInformationForUpdate (optional)
      * @return ResponseEntity<AuthenticationResponse>
      */
     @Override
-    public ResponseEntity<AuthenticationResponse> postingsPatch(@Valid PostingInformationForUpdate postingInformationForUpdate) {
-
-        final PostingSimpleDto postingDto = PostingSimpleDto.builder()
-                .id(postingInformationForUpdate.getId())
-                .deadline(postingInformationForUpdate.getDeadline())
-                .name(postingInformationForUpdate.getName())
-                .description(postingInformationForUpdate.getDescription())
-                .requirements(postingInformationForUpdate.getRequirements())
-                .build();
+    public ResponseEntity<AuthenticationResponse> postingsPatch(
+            @Valid PostingInformationForUpdate postingInformationForUpdate) {
+        final PostingSimpleDto postingDto = buildSimplePostingDto(postingInformationForUpdate);
         try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.editPosting(postingDto);
@@ -117,17 +122,7 @@ public class PostingsController implements PostingsApi {
      */
     @Override
     public ResponseEntity<AuthenticationResponse> postingsPost(@Valid PostingsInformation postingsInformation) {
-
-        final PostingDto postingDto = PostingDto.builder()
-                .postedBy(postingsInformation.getPostedById())
-                .postedAt(postingsInformation.getPostedAt())
-                .deadline(postingsInformation.getDeadline())
-                .numberOfViews(postingsInformation.getNumberOfViews())
-                .name(postingsInformation.getName())
-                .description(postingsInformation.getDescription())
-                .category(postingsInformation.getCategoryId())
-                .requirements(postingsInformation.getRequirements())
-                .build();
+        final PostingDto postingDto = buildPostingDto(postingsInformation);
         try {
             AuthenticationResponse response = new AuthenticationResponse();
             postingsService.addPosting(postingDto);
@@ -141,5 +136,28 @@ public class PostingsController implements PostingsApi {
             response.setStatus(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.ok(response);
         }
+    }
+
+    private PostingDto buildPostingDto(@Valid PostingsInformation postingsInformation) {
+        return PostingDto.builder()
+                .postedBy(postingsInformation.getPostedById())
+                .postedAt(postingsInformation.getPostedAt())
+                .deadline(postingsInformation.getDeadline())
+                .numberOfViews(postingsInformation.getNumberOfViews())
+                .name(postingsInformation.getName())
+                .description(postingsInformation.getDescription())
+                .category(postingsInformation.getCategoryId())
+                .requirements(postingsInformation.getRequirements())
+                .build();
+    }
+
+    private PostingSimpleDto buildSimplePostingDto(@Valid PostingInformationForUpdate postingInformationForUpdate) {
+        return PostingSimpleDto.builder()
+                .id(postingInformationForUpdate.getId())
+                .deadline(postingInformationForUpdate.getDeadline())
+                .name(postingInformationForUpdate.getName())
+                .description(postingInformationForUpdate.getDescription())
+                .requirements(postingInformationForUpdate.getRequirements())
+                .build();
     }
 }

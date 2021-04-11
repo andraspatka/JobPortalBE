@@ -7,6 +7,7 @@ import com.jobportal.jobportal.exceptions.InvalidRoleException;
 import com.jobportal.jobportal.exceptions.RequestException;
 import com.jobportal.jobportal.exceptions.UnknownUserException;
 import com.jobportal.jobportal.model.Request;
+import com.jobportal.jobportal.model.RequestStatus;
 import com.jobportal.jobportal.model.Role;
 import com.jobportal.jobportal.model.User;
 import com.jobportal.jobportal.repository.RequestRepository;
@@ -14,10 +15,13 @@ import com.jobportal.jobportal.repository.UserRepository;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -61,14 +65,14 @@ public class RequestService {
      *
      * @param email of the admin who's requests must be found
      * @return set containing all the unapproved requests for the admin
-     * */
+     */
     public Set<RequestDto> getUnapprovedRequestsForAdmin(@NotNull String email) {
         Optional<User> admin = userRepository.findUserByEmail(email);
         if (admin.isPresent()) {
             if (Role.ADMIN.equals(admin.get().getRole())) {
                 Set<Request> requests = requestRepository.findAllByApprovedBy(admin.get())
                         .stream()
-                        .filter(request -> Objects.isNull(request.getApprovedOn()))
+                        .filter(request -> RequestStatus.PENDING.equals(request.getStatus()))
                         .collect(Collectors.toSet());
                 return RequestConverter.convertEntitiesToDtos(requests);
             } else {
@@ -76,6 +80,32 @@ public class RequestService {
             }
         } else {
             throw new UnknownUserException("Admin with the given does not exist.");
+        }
+    }
+
+    /**
+     * Updates the status of a request.
+     *
+     * @param requestId id of the {@link Request}
+     * @param status    of type {@link RequestStatus}
+     */
+    public void updateRequestStatus(@NonNull Long requestId, @NonNull String status) {
+        Optional<Request> requestOptional = requestRepository.findById(requestId);
+        if (requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            if (!RequestStatus.valueOf(status).equals(request.getStatus())) {
+                request.setStatus(RequestStatus.valueOf(status));
+                if(RequestStatus.APPROVED.equals(request.getStatus())){
+                    request.getRequestedBy().setRole(Role.EMPLOYER);
+                }
+                request.setApprovedOn(LocalDate.now().toDate());
+                requestRepository.save(request);
+            } else {
+                throw new RequestException("An error occurred while trying to update the status" +
+                        " of the request.");
+            }
+        } else {
+            throw new RequestException("No request with the given id exists.");
         }
     }
 
@@ -100,6 +130,7 @@ public class RequestService {
         return Request.builder()
                 .approvedBy(sender.getCompany().getAdmin())
                 .requestedBy(sender)
+                .status(RequestStatus.PENDING)
                 .build();
     }
 

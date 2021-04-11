@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -37,4 +36,8 @@ public class Request {
 
     @Column(name = "approved_on")
     private Date approvedOn;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
+    private RequestStatus status;
 }
